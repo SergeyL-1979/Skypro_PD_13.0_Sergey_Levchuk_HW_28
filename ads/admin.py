@@ -1,15 +1,15 @@
 from django.contrib import admin
-from ads.models import Announcement, Category, Location, Author
+from ads.models import Announcement, Category, Location, User
 
 # Register your models here.
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('name', 'lat', 'lng', )
 
-@admin.register(Author)
+@admin.register(User)
 class MyUserAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'username', 'role', 'age', 'location', )
-    # order_by = ('username', )
+    list_display = ('first_name', 'last_name', 'username', 'role', 'age',  )
+    # raw_id_fields = ('location', )
     ordering = ('username', )
 
 
@@ -20,17 +20,17 @@ class AnnouncementAdmin(admin.ModelAdmin):
     :param list_per_page - количество объектов на страницу
     :param list_max_show_all - отобразить все объекты не более указанного количества
     """
-    list_display = ('name', 'author', 'price', 'image_', 'description', 'category', )
+    list_display = ('name', 'author', 'price', 'image_', 'category', 'is_published', )
     readonly_fields = ('image_', )
-    list_filter = ('name', 'category')
+    raw_username_fields = ('author', )
+    list_filter = ('category', )
     ordering = ('-price', )
     list_per_page = 5
     list_max_show_all = 50
 
-# admin.site.register(Announcements)
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     """ Отображает имена категорий в колонке """
-    list_display = ('category_name', )
-    ordering = ('category_name', )
+    list_display = ('name', )
+    ordering = ('name', )
