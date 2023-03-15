@@ -13,11 +13,11 @@ class Category(models.Model):
         verbose_name_plural = "Категории"
 
     def __str__(self):
-        # return f"Категория: {self.category_name}"
         return '{}'.format(self.name)
 
 
 class Location(models.Model):
+    """ Модель местоположения """
     name = models.CharField(_("Местоположение"), max_length=250)
     lat = models.FloatField(_("lat"))
     lng = models.FloatField(_("lng"))
@@ -30,6 +30,7 @@ class Location(models.Model):
         return self.name
 
 class User(models.Model):
+    """ Модель пользователя и автора объявлений """
     STATUS = [
         ("admin", "Администратор"),
         ("moderator", "Модератор"),
@@ -79,7 +80,3 @@ class Announcement(models.Model):
 
     def __str__(self):
         return self.author.username
-
-
-
-
