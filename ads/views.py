@@ -6,7 +6,7 @@ from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import DetailView
 
-from ads.models import Announcements, Category
+from ads.models import Announcement, Category
 
 
 def status(request):
@@ -18,7 +18,7 @@ def status(request):
 class AnnouncementsView(View):
     """ Вывод всех объявлений. Так же можно добавить объявление"""
     def get(self, request):
-        announce = Announcements.objects.all()
+        announce = Announcement.objects.all()
 
         response = []
         for i in announce:
@@ -41,7 +41,7 @@ class AnnouncementsView(View):
         # announce.address = announce_data["address"]
         # announce.is_published = announce_data["is_published"]
         # announce.save()
-        announce = Announcements.objects.create(
+        announce = Announcement.objects.create(
             name=announce_data["name"],
             author=announce_data["author"],
             price=announce_data["price"],
@@ -62,7 +62,7 @@ class AnnouncementsView(View):
 
 class AnnouncementsDetailView(DetailView):
     """ Вывод детальной информации одной карточки объявления """
-    model = Announcements
+    model = Announcement
 
     def get(self, request, *args, **kwargs):
         announce = self.get_object()
