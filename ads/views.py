@@ -175,6 +175,7 @@ class CategoryDetailView(generic.DetailView):
         })
 # ==============================================================================================
 
+
 @method_decorator(csrf_exempt, name='dispatch')
 class AnnouncementCreateView(generic.CreateView):
     model = Announcement
@@ -266,21 +267,21 @@ class CategoryUpdateView(generic.UpdateView):
 
 
 
-# TODO LOCATION ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
-class LocationDetailView(generic.DetailView):
-    model = Location
-
-    def get(self, request, *args, **kwargs):
-        super().get(request, *args, **kwargs)
-
-        locations = self.get_object()
-
-        response = []
-        for location in locations:
-            response.append({
-                "name": location.name,
-                "lat": location.lat,
-                "lng": location.lng,
-            })
-
-        return JsonResponse(response, safe=False)
+# TODO LocationDetail ====== МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
+# class LocationDetailView(generic.DetailView):
+#     model = Location
+#
+#     def get(self, request, *args, **kwargs):
+#         super().get(request, *args, **kwargs)
+#
+#         locations = self.get_object()
+#
+#         response = []
+#         for location in locations:
+#             response.append({
+#                 "name": location.name,
+#                 "lat": location.lat,
+#                 "lng": location.lng,
+#             })
+#
+#         return JsonResponse(response, safe=False)
