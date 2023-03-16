@@ -1,66 +1,132 @@
 import json
 
+from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponse
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import DetailView
+# from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.views import generic
 
-from ads.models import Announcement, Category
+from .models import Announcement, Category, Location, User
+from avito import settings
 
 
-def status(request):
+def root(request):
     return JsonResponse({"STATUS": "OK!"})
 
 
-# Create your views here.
-@method_decorator(csrf_exempt, name='dispatch') # отключение проверки CSRF в классах декоратор @method_decorator
-class AnnouncementsView(View):
-    """ Вывод всех объявлений. Так же можно добавить объявление"""
-    def get(self, request):
-        announce = Announcement.objects.all()
+# ====== ГОТОВАЯ МОДЕЛЬ ======
+class UserListView(generic.ListView):
+    """ Модель отображающая весь список пользователей и вывод на страницу не более 10 """
+    model = User
 
-        response = []
-        for i in announce:
-            response.append({
+    def get(self, request, *args, **kwargs):
+        super().get(request, *args, **kwargs)
+
+        # users = User.objects.all()
+        self.object_list = self.object_list.prefetch_related('location').order_by("username")
+        # ========= ПАГИНАЦИЯ С ПОМОЩЬЮ DJANGO ===============
+        paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        users = []
+        for user in page_obj:
+            users.append({
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "username": user.username,
+                "password": user.password,
+                "role": user.role,
+                "age": user.age,
+                "location": list(map(str, user.location.all())),
+            })
+
+        response = {
+            "items": users,
+            "num_pages": paginator.num_pages,
+            "total": paginator.count,
+        }
+
+        return JsonResponse(response, safe=False)
+
+
+
+# ======= ГООТОВАЯ МОДЕЛЬ =======
+class AnnouncementListView(generic.ListView):
+    """ Модель отображающая весь список объектов и вывод на страницу не более 10 """
+    model = Announcement
+    def get(self, request, *args, **kwargs):
+        super().get(request, *args, **kwargs)
+        # announce = Announcement.objects.all()
+
+        self.object_list = self.object_list.select_related('author').order_by("name")
+        # ========= ПАГИНАЦИЯ С ПОМОЩЬЮ DJANGO ===============
+        paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        announce = []
+        for i in page_obj:
+            announce.append({
                 "id": i.pk,
                 "name": i.name,
-                "author": i.author,
+                "author": i.author.username,
                 "price": i.price,
+                "description": i.description,
+                "category": i.category_id
+            })
+
+        response = {
+            "items": announce,
+            "num_pages": paginator.num_pages,
+            "total": paginator.count,
+        }
+        return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
+
+
+
+# ======== ГОТОВАЯ МОДЕЛЬ ========
+@method_decorator(csrf_exempt, name='dispatch')
+class CategoryListView(generic.ListView):
+    """ Модель отображает все объекты """
+    def get(self, request, *args, **kwargs):
+        categories = Category.objects.all()
+
+        response = []
+        for category in categories:
+            response.append({
+                "id": category.pk,
+                "name": category.name,
             })
         return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
 
-    def post(self, request):
-        announce_data = json.loads(request.body)
 
-        # announce = Announcements()
-        # announce.name = announce_data["name"]
-        # announce.author = announce_data["author"]
-        # announce.price = announce_data["price"]
-        # announce.description = announce_data["description"]
-        # announce.address = announce_data["address"]
-        # announce.is_published = announce_data["is_published"]
-        # announce.save()
-        announce = Announcement.objects.create(
-            name=announce_data["name"],
-            author=announce_data["author"],
-            price=announce_data["price"],
-            description=announce_data["description"],
-            address=announce_data["address"],
-            is_published=announce_data["is_published"],
-        )
 
-        return JsonResponse({
-            "id": announce.pk,
-            "name": announce.name,
-            "author": announce.author,
-            "price": announce.price,
-            "description": announce.description,
-            "address": announce.address,
-            "is_published": announce.is_published,
-        })
+# ======= ГООТОВАЯ МОДЕЛЬ ========
+class LocationListView(generic.ListView):
+    """ Модель выводить весь список объектов """
+    model = Location
 
-class AnnouncementsDetailView(DetailView):
+    def get(self, request, *args, **kwargs):
+        super().get(request, *args, **kwargs)
+
+        loc = Location.objects.all()
+
+        response = []
+        for res in loc:
+            response.append({
+                "name": res.name,
+                "lat": res.lat,
+                "lng": res.lng,
+            })
+
+        return JsonResponse(response, safe=False)
+
+
+
+class AnnouncementsDetailView(generic.DetailView):
     """ Вывод детальной информации одной карточки объявления """
     model = Announcement
 
@@ -70,30 +136,77 @@ class AnnouncementsDetailView(DetailView):
         return JsonResponse({
             "id": announce.pk,
             "name": announce.name,
-            "author": announce.author,
+            "author": announce.author.username,
             "price": announce.price,
             "description": announce.description,
-            "address": announce.address,
+            "is_published": announce.is_published,
+        })
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AnnouncementsCreateView(generic.CreateView):
+    model = Announcement
+    fields = ["name", "author", "price", "description", "is_published", "category", ]
+    def post(self, request, *args, **keyword):
+        announce_data = json.loads(request.body)
+
+        announce = Announcement.objects.create(
+            name=announce_data["name"],
+            author=announce_data["author"],
+            price=announce_data["price"],
+            description=announce_data["description"],
+            is_published=announce_data["is_published"],
+            catrgory=announce_data["category"]
+        )
+
+        return JsonResponse({
+            "id": announce.pk,
+            "name": announce.name,
+            "author": announce.author.username,
+            "price": announce.price,
+            "description": announce.description,
             "is_published": announce.is_published,
         })
 
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class CategoryView(View):
-    """ КАТЕГОРИИ """
-    def get(self, request):
-        categories = Category.objects.all()
+class AnnouncementsUpdateView(generic.CreateView):
+    model = Announcement
+    fields = ["name", "author", "price", "description", "is_published", "category", ]
 
-        response = []
-        for category in categories:
-            response.append({
-                "id": category.pk,
-                "name": category.category_name,
-            })
-        return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
+    def patch(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
 
-    def post(self, request):
+        announce_data = json.loads(request.body)
+
+        self.object.name = announce_data["name"]
+        self.object.author = announce_data["author"]
+        self.object.price = announce_data["price"]
+        self.object.description = announce_data["description"]
+        self.object.is_published = announce_data["is_published"]
+        self.object.category = announce_data["category"]
+
+        return JsonResponse({
+            "name": self.object.name,
+            "author": self.object.author,
+            "price": self.object.price,
+            "description": self.object.description,
+            "is_published": self.object.is_published,
+            "category": self.object.category,
+        })
+
+
+
+
+
+
+# TODO
+@method_decorator(csrf_exempt, name='dispatch')
+class CategoryCreateView(generic.CreateView):
+    model = Category
+    fields = ["name", ]
+    def post(self, request, *args, **kwargs):
         category_data = json.loads(request.body)
 
         # category = Category()
@@ -105,11 +218,19 @@ class CategoryView(View):
 
         return JsonResponse({
             "id": category.pk,
-            "name": category.category_name,
+            "name": category.name,
         })
 
 
-class CategoryDetailView(DetailView):
+
+# TODO
+@method_decorator(csrf_exempt, name='dispatch')
+class CategoryUpdateView(generic.UpdateView):
+    model = Category
+    fields = ["name", ]
+
+
+class CategoryDetailView(generic.DetailView):
     """ Вывод деталей категории """
     model = Category
 
@@ -118,5 +239,8 @@ class CategoryDetailView(DetailView):
 
         return JsonResponse({
             "id": category.pk,
-            "name": category.category_name,
+            "name": category.name,
         })
+
+
+
