@@ -1,4 +1,3 @@
-# from django.contrib.auth.models import User
 from django.db import models
 from django.utils.translation import gettext as _
 
@@ -18,9 +17,11 @@ class Category(models.Model):
 
 class Location(models.Model):
     """ Модель местоположения """
-    name = models.CharField(_("Местоположение"), max_length=250)
+    name = models.CharField(_("Местоположение"), max_length=50)
     lat = models.FloatField(_("lat"))
     lng = models.FloatField(_("lng"))
+    # lat = models.DecimalField(_("lat"), max_digits=8, decimal_places=8, null=True)
+    # lng = models.DecimalField(_("lng"), max_digits=8, decimal_places=8, null=True)
 
     class Meta:
         verbose_name = "Локация"
@@ -29,6 +30,7 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
+
 class User(models.Model):
     """ Модель пользователя и автора объявлений """
     STATUS = [
@@ -36,19 +38,19 @@ class User(models.Model):
         ("moderator", "Модератор"),
         ("member", "Участник"),
     ]
-    first_name = models.CharField(_("Имя"), max_length=150)
-    last_name = models.CharField(_("Фамилия"), max_length=150)
-    # username = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Автор')
-    username = models.CharField(_("Никнейм"), max_length=150)
+    first_name = models.CharField(_("Имя"), max_length=50)
+    last_name = models.CharField(_("Фамилия"), max_length=50, null=True, blank=True)
+    username = models.CharField(_("Никнейм"), max_length=50)
     password = models.CharField(_("password"), max_length=150)
-    role = models.CharField(_("Права пользователя"), max_length=15, choices=STATUS, default="member")
+    role = models.CharField(_("Права пользователя"), max_length=10, choices=STATUS, default="member")
     age = models.IntegerField(_("Возраст"))
-    # location = models.ManyToManyField(Location, verbose_name='Местоположение')
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='Местоположение')
+    location = models.ManyToManyField(Location, verbose_name='Местоположение')
+    # location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='Местоположение')
 
     class Meta:
         verbose_name = "Пользователь"
         verbose_name_plural = "Пользователи"
+        ordering = ["username"]
 
     def __str__(self):
         return "{} {}".format(self.last_name, (self.username, ))
