@@ -6,10 +6,10 @@ from ads.models import Announcement, Category, Location, User
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('name', 'lat', 'lng', )
 
+
 @admin.register(User)
 class MyUserAdmin(admin.ModelAdmin):
-    list_display = ('first_name', 'last_name', 'username', 'role', 'age',  )
-    # raw_id_fields = ('location', )
+    list_display = ('first_name', 'last_name', 'username', 'role', 'age', )
     ordering = ('username', )
 
 
