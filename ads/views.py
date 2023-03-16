@@ -16,7 +16,7 @@ def root(request):
     return JsonResponse({"STATUS": "OK!"})
 
 
-# ====== ГОТОВАЯ МОДЕЛЬ ======
+# UserList ====== ГОТОВАЯ МОДЕЛЬ ======
 class UserListView(generic.ListView):
     """ Модель отображающая весь список пользователей и вывод на страницу не более 10 """
     model = User
@@ -34,6 +34,7 @@ class UserListView(generic.ListView):
         users = []
         for user in page_obj:
             users.append({
+                "id": user.pk,
                 "first_name": user.first_name,
                 "last_name": user.last_name,
                 "username": user.username,
@@ -52,8 +53,7 @@ class UserListView(generic.ListView):
         return JsonResponse(response, safe=False)
 
 
-
-# ======= ГООТОВАЯ МОДЕЛЬ =======
+# AnnouncementList ======= ГООТОВАЯ МОДЕЛЬ =======
 class AnnouncementListView(generic.ListView):
     """ Модель отображающая весь список объектов и вывод на страницу не более 10 """
     model = Announcement
@@ -86,8 +86,7 @@ class AnnouncementListView(generic.ListView):
         return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
 
 
-
-# ======== ГОТОВАЯ МОДЕЛЬ ========
+# CategoryList ======== ГОТОВАЯ МОДЕЛЬ ========
 @method_decorator(csrf_exempt, name='dispatch')
 class CategoryListView(generic.ListView):
     """ Модель отображает все объекты """
@@ -103,8 +102,7 @@ class CategoryListView(generic.ListView):
         return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
 
 
-
-# ======= ГООТОВАЯ МОДЕЛЬ ========
+# LocationList ======= ГООТОВАЯ МОДЕЛЬ ========
 class LocationListView(generic.ListView):
     """ Модель выводить весь список объектов """
     model = Location
@@ -125,8 +123,28 @@ class LocationListView(generic.ListView):
         return JsonResponse(response, safe=False)
 
 
+# UserDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
+class UserDetailView(generic.DetailView):
+    """ Отображает детальную информацию об объекте """
+    model = User
 
-class AnnouncementsDetailView(generic.DetailView):
+    def get(self, request, *args, **kwargs):
+        users = self.get_object()
+
+        return JsonResponse({
+            "first_name": users.first_name,
+            "last_name": users.last_name,
+            "username": users.username,
+            "password": users.password,
+            "role": users.role,
+            "age": users.age,
+            # "location": users.location.name,
+            "location": list(map(str, users.location.all())),
+        })
+
+
+# AnnouncementDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
+class AnnouncementDetailView(generic.DetailView):
     """ Вывод детальной информации одной карточки объявления """
     model = Announcement
 
@@ -143,8 +161,22 @@ class AnnouncementsDetailView(generic.DetailView):
         })
 
 
+# CategoryDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
+class CategoryDetailView(generic.DetailView):
+    """ Вывод деталей категории """
+    model = Category
+
+    def get(self, request, *args, **kwargs):
+        category = self.get_object()
+
+        return JsonResponse({
+            "id": category.pk,
+            "name": category.name,
+        })
+# ==============================================================================================
+
 @method_decorator(csrf_exempt, name='dispatch')
-class AnnouncementsCreateView(generic.CreateView):
+class AnnouncementCreateView(generic.CreateView):
     model = Announcement
     fields = ["name", "author", "price", "description", "is_published", "category", ]
     def post(self, request, *args, **keyword):
@@ -171,7 +203,7 @@ class AnnouncementsCreateView(generic.CreateView):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class AnnouncementsUpdateView(generic.CreateView):
+class AnnouncementUpdateView(generic.CreateView):
     model = Announcement
     fields = ["name", "author", "price", "description", "is_published", "category", ]
 
@@ -230,17 +262,25 @@ class CategoryUpdateView(generic.UpdateView):
     fields = ["name", ]
 
 
-class CategoryDetailView(generic.DetailView):
-    """ Вывод деталей категории """
-    model = Category
+
+
+
+
+# TODO LOCATION ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
+class LocationDetailView(generic.DetailView):
+    model = Location
 
     def get(self, request, *args, **kwargs):
-        category = self.get_object()
+        super().get(request, *args, **kwargs)
 
-        return JsonResponse({
-            "id": category.pk,
-            "name": category.name,
-        })
+        locations = self.get_object()
 
+        response = []
+        for location in locations:
+            response.append({
+                "name": location.name,
+                "lat": location.lat,
+                "lng": location.lng,
+            })
 
-
+        return JsonResponse(response, safe=False)
