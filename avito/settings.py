@@ -139,3 +139,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # ======= Вывод объектов на страницу ========
 TOTAL_ON_PAGE = 10
+
+# === ОТОБРАЖЕНИЕ ЗАПРОСОВ К БАЗЕ ДАННЫХ В ТЕРМИНАЛЕ =====
+LOGGING = {
+    'disable_existing_loggers': False,
+    'version': 1,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'level': 'DEBUG'
+        }
+
+    },
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate':False
+        },
+        'django.db':{
+            'level':'DEBUG',
+        },
+    }
+}
