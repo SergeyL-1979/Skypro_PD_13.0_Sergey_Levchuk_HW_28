@@ -7,8 +7,7 @@
             "username": "pnikifirov",
             "password": "gZvptL",
             "role": "member",
-            "age": "21",
-            "location_id": "1"
+            "age": "21"
         }
     },
     {
@@ -19,8 +18,7 @@
             "username": "abiba_1341",
             "password": "4fVqL2",
             "role": "moderator",
-            "age": "24",
-            "location_id": "3"
+            "age": "24"
         }
     },
     {
@@ -31,8 +29,7 @@
             "username": "vanya777",
             "password": "o535pj",
             "role": "admin",
-            "age": "29",
-            "location_id": "8"
+            "age": "29"
         }
     },
     {
@@ -43,8 +40,7 @@
             "username": "orlanfree",
             "password": "d49rSO",
             "role": "moderator",
-            "age": "19",
-            "location_id": "10"
+            "age": "19"
         }
     },
     {
@@ -55,8 +51,7 @@
             "username": "galina_ivanova",
             "password": "wCqlVE",
             "role": "member",
-            "age": "41",
-            "location_id": "2"
+            "age": "41"
         }
     },
     {
@@ -67,8 +62,7 @@
             "username": "petr_bo",
             "password": "xuR2jf",
             "role": "member",
-            "age": "37",
-            "location_id": "4"
+            "age": "37"
         }
     },
     {
@@ -79,8 +73,7 @@
             "username": "nikitapro",
             "password": "gzP4vR",
             "role": "member",
-            "age": "26",
-            "location_id": "7"
+            "age": "26"
         }
     },
     {
@@ -91,8 +84,7 @@
             "username": "riverna",
             "password": "zo0rj6",
             "role": "member",
-            "age": "24",
-            "location_id": "5"
+            "age": "24"
         }
     },
     {
@@ -103,8 +95,7 @@
             "username": "gulnara321",
             "password": "daMocL",
             "role": "moderator",
-            "age": "22",
-            "location_id": "9"
+            "age": "22"
         }
     },
     {
@@ -115,8 +106,7 @@
             "username": "dragon84",
             "password": "sasha123456",
             "role": "member",
-            "age": "35",
-            "location_id": "6"
+            "age": "35"
         }
     }
 ]

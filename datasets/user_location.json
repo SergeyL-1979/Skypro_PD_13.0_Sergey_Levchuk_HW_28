@@ -1,0 +1,72 @@
+[
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "1",
+            "location_id": "1"
+        }
+    },
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "2",
+            "location_id": "3"
+        }
+    },
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "3",
+            "location_id": "8"
+        }
+    },
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "4",
+            "location_id": "10"
+        }
+    },
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "5",
+            "location_id": "2"
+        }
+    },
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "6",
+            "location_id": "4"
+        }
+    },
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "7",
+            "location_id": "7"
+        }
+    },
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "8",
+            "location_id": "5"
+        }
+    },
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "9",
+            "location_id": "9"
+        }
+    },
+    {
+        "model": "ads.user_location",
+        "fields": {
+            "user_id": "10",
+            "location_id": "6"
+        }
+    }
+]
