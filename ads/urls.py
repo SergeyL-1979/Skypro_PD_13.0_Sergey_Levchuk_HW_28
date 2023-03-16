@@ -11,7 +11,7 @@ urlpatterns = [
     path('ad/', views.AnnouncementListView.as_view(), name='announce_list'),
     path('ad/<int:pk>/', views.AnnouncementDetailView.as_view(), name='announce_detail'),
     path('ad/update/<int:pk>/', views.AnnouncementUpdateView.as_view(), name='announce_update'),
-    path('create/', views.AnnouncementCreateView.as_view(), name='create_announce'),
+    path('ad/create/', views.AnnouncementCreateView.as_view(), name='create_announce'),
 
     path('cat/', views.CategoryListView.as_view(), name='category_list'),
     path('cat/create/', views.CategoryCreateView.as_view(), name='category_create'),
@@ -24,4 +24,5 @@ urlpatterns = [
 
     path('users/', views.UserListView.as_view(), name='users_list'),
     path('users/<int:pk>/', views.UserDetailView.as_view(), name='users_detail'),
+    path('users/create/', views.UserCreateView.as_view(), name='users_create'),
 ]

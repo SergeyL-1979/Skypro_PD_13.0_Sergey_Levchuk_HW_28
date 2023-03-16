@@ -2,13 +2,14 @@ import json
 
 from django.core.paginator import Paginator
 from django.http import JsonResponse, HttpResponse
+from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 # from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.views import generic
 
-from .models import Announcement, Category, Location, User
+from ads.models import Announcement, Category, Location, User
 from avito import settings
 
 
@@ -173,9 +174,43 @@ class CategoryDetailView(generic.DetailView):
             "id": category.pk,
             "name": category.name,
         })
-# ==============================================================================================
 
 
+# UserCreate ====== МОДЕЛЬ СОЗДАНИЯ =========================
+@method_decorator(csrf_exempt, name='dispatch')
+class UserCreateView(generic.CreateView):
+    model = User
+    fields = ["first_name", "last_name", "username", "password", "role", "age", "location", ]
+
+    def post(self, request, *args, **kwargs):
+        user_data = json.loads(request.body)
+
+        users = User.objects.create(
+            first_name=user_data["first_name"],
+            last_name=user_data["last_name"],
+            username=user_data["username"],
+            password=user_data["password"],
+            role=user_data["role"],
+            age=user_data["age"],
+            # location=user_data["location"],
+        )
+
+        users.save()
+
+        return JsonResponse({
+            "id": users.pk,
+            "first_name": users.first_name,
+            "last_name": users.last_name,
+            "username": users.username,
+            "password": users.password,
+            "role": users.role,
+            "age": users.age,
+            # "location": user.location,
+            "location": list(map(str, users.location.all())),
+        })
+# ===========================================================================================
+
+# TODO AnnouncementCreate ========= МОДЕЛЬ CREATE ================
 @method_decorator(csrf_exempt, name='dispatch')
 class AnnouncementCreateView(generic.CreateView):
     model = Announcement
@@ -202,7 +237,33 @@ class AnnouncementCreateView(generic.CreateView):
         })
 
 
+# TODO CategoryCreate ========= МОДЕЛЬ CREATE ================
+@method_decorator(csrf_exempt, name='dispatch')
+class CategoryCreateView(generic.CreateView):
+    model = Category
+    fields = ["name", ]
+    def post(self, request, *args, **kwargs):
+        category_data = json.loads(request.body)
 
+        # category = Category()
+        # category.category_name = category_data["name"]
+        # category.save()
+        category = Category.objects.create(
+            name=category_data["name"],
+        )
+
+        return JsonResponse({
+            "id": category.pk,
+            "name": category.name,
+        })
+
+
+# TODO UserUpdate ==================== МОДЕЛЬ РЕДАКТИРОВАНИЯ =====================
+
+
+
+
+# TODO AnnouncementUpdate ============= МОДЕЛЬ UPDATE ===========================
 @method_decorator(csrf_exempt, name='dispatch')
 class AnnouncementUpdateView(generic.CreateView):
     model = Announcement
@@ -230,33 +291,7 @@ class AnnouncementUpdateView(generic.CreateView):
         })
 
 
-
-
-
-
-# TODO
-@method_decorator(csrf_exempt, name='dispatch')
-class CategoryCreateView(generic.CreateView):
-    model = Category
-    fields = ["name", ]
-    def post(self, request, *args, **kwargs):
-        category_data = json.loads(request.body)
-
-        # category = Category()
-        # category.category_name = category_data["name"]
-        # category.save()
-        category = Category.objects.create(
-            name=category_data["name"],
-        )
-
-        return JsonResponse({
-            "id": category.pk,
-            "name": category.name,
-        })
-
-
-
-# TODO
+# TODO CategoryUpdate =========== МОДЕЛЬ РЕДАКТИРОВАНИЯ КАТЕГОРИИ ===================
 @method_decorator(csrf_exempt, name='dispatch')
 class CategoryUpdateView(generic.UpdateView):
     model = Category
