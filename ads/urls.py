@@ -19,7 +19,8 @@ urlpatterns = [
     path('cat/update/<int:pk>/', views.CategoryUpdateView.as_view(), name='category_update'),
 
     path('location/', views.LocationListView.as_view(), name='location_list'),
-    path('location/<int:pk>/', views.LocationDetailView.as_view(), name='location_list'),
+    # TODO === не выполнено
+    # path('location/<int:pk>/', views.LocationDetailView.as_view(), name='location_list'),
 
     path('users/', views.UserListView.as_view(), name='users_list'),
     path('users/<int:pk>/', views.UserDetailView.as_view(), name='users_detail'),
