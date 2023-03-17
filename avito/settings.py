@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # ===== MY APP =====
     'ads.apps.AdsConfig',
+    'category.apps.CategoryConfig',
+    'users.apps.UsersConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',

@@ -1,129 +1,21 @@
 import json
 
 from django.core.paginator import Paginator
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-from django.views import View
+
 from django.views.decorators.csrf import csrf_exempt
-# from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+
 from django.views import generic
 
-from ads.models import Announcement, Category, Location, User
+from ads.models import Announcement, User, Category
 from avito import settings
 
 
 def root(request):
     return JsonResponse({"STATUS": "OK!"})
 
-
-# UserList ================= ГОТОВАЯ МОДЕЛЬ ПОЛЬЗОВАТЕЛЯ ==================
-class UserListView(generic.ListView):
-    """ Модель отображающая весь список пользователей и вывод на страницу не более 10 """
-    model = User
-
-    def get(self, request, *args, **kwargs):
-        super().get(request, *args, **kwargs)
-
-        # users = User.objects.all()
-        self.object_list = self.object_list.prefetch_related('location').order_by("username")
-        # ========= ПАГИНАЦИЯ С ПОМОЩЬЮ DJANGO ===============
-        paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
-
-        users = []
-        for user in page_obj:
-            users.append({
-                "id": user.pk,
-                "first_name": user.first_name,
-                "last_name": user.last_name,
-                "username": user.username,
-                "password": user.password,
-                "role": user.role,
-                "age": user.age,
-                "location": list(map(str, user.location.all())),
-            })
-
-        response = {
-            "items": users,
-            "num_pages": paginator.num_pages,
-            "total": paginator.count,
-        }
-
-        return JsonResponse(response, safe=False)
-
-
-# UserDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ПОЛЬЗОВАТЕЛЯ ==============
-class UserDetailView(generic.DetailView):
-    """ Отображает детальную информацию об объекте """
-    model = User
-
-    def get(self, request, *args, **kwargs):
-        users = self.get_object()
-
-        return JsonResponse({
-            "first_name": users.first_name,
-            "last_name": users.last_name,
-            "username": users.username,
-            "password": users.password,
-            "role": users.role,
-            "age": users.age,
-            # "location": users.location.name,
-            "location": list(map(str, users.location.all())),
-        })
-
-
-# UserCreate ====== МОДЕЛЬ СОЗДАНИЯ ПОЛЬЗОВАТЕЛЯ =========================
-@method_decorator(csrf_exempt, name='dispatch')
-class UserCreateView(generic.CreateView):
-    model = User
-    fields = ["first_name", "last_name", "username", "password", "role", "age", "location", ]
-
-    def post(self, request, *args, **kwargs):
-        user_data = json.loads(request.body)
-
-        users = User.objects.create(
-            first_name=user_data["first_name"],
-            last_name=user_data["last_name"],
-            username=user_data["username"],
-            password=user_data["password"],
-            role=user_data["role"],
-            age=user_data["age"],
-            # location=user_data["location"],
-        )
-
-        users.save()
-
-        return JsonResponse({
-            "id": users.pk,
-            "first_name": users.first_name,
-            "last_name": users.last_name,
-            "username": users.username,
-            "password": users.password,
-            "role": users.role,
-            "age": users.age,
-            # "location": user.location,
-            "location": list(map(str, users.location.all())),
-        })
-
-
-# TODO UserUpdate ==================== МОДЕЛЬ РЕДАКТИРОВАНИЯ =====================
-@method_decorator(csrf_exempt, name='dispatch')
-class UserUpdateView(generic.UpdateView):
-    model = User
-    fields = ["first_name", "last_name", "username", "role", "age", "location", "image", ]
-
-
-# TODO UserDelete ==================== МОДЕЛЬ УДАЛЕНИЕ =====================
-@method_decorator(csrf_exempt, name='dispatch')
-class UserDeleteView(generic.DeleteView):
-    model = User
-    success_url = '/'
-
-
-
-# ================== ПОЛЬЗОВАТЕЛЬ ЗАВЕРШЕН =======================================================
 
 # AnnouncementList ================= ГОТОВАЯ МОДЕЛЬ ОБЪЯВЛЕНИЯ ========================
 class AnnouncementListView(generic.ListView):
@@ -212,6 +104,7 @@ class AnnouncementCreateView(generic.CreateView):
             "is_published": announce.is_published,
             "image": announce.image.url if announce.image else None,
             "category_id": announce.category.pk,
+            "category": announce.category.name,
         })
 
 
@@ -260,142 +153,5 @@ class AnnouncementDeleteView(generic.DeleteView):
 
 # ============================ ЗАВЕРШЕНА МОДЕЛЬ ОБЪЯВЛЕНИЯ ===========================================
 
-# CategoryList ======== ГОТОВАЯ МОДЕЛЬ ========
-@method_decorator(csrf_exempt, name='dispatch')
-class CategoryListView(generic.ListView):
-    """ Модель отображает все объекты """
-    def get(self, request, *args, **kwargs):
-        categories = Category.objects.all()
-
-        response = []
-        for category in categories:
-            response.append({
-                "id": category.pk,
-                "name": category.name,
-            })
-        return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
 
 
-# LocationList ======= ГООТОВАЯ МОДЕЛЬ ========
-class LocationListView(generic.ListView):
-    """ Модель выводить весь список объектов """
-    model = Location
-
-    def get(self, request, *args, **kwargs):
-        super().get(request, *args, **kwargs)
-
-        loc = Location.objects.all()
-
-        response = []
-        for res in loc:
-            response.append({
-                "name": res.name,
-                "lat": res.lat,
-                "lng": res.lng,
-            })
-
-        return JsonResponse(response, safe=False)
-
-
-
-
-
-
-
-# CategoryDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
-class CategoryDetailView(generic.DetailView):
-    """ Вывод деталей категории """
-    model = Category
-
-    def get(self, request, *args, **kwargs):
-        category = self.get_object()
-
-        return JsonResponse({
-            "id": category.pk,
-            "name": category.name,
-        })
-
-
-
-
-
-
-
-
-# CategoryCreate ========= МОДЕЛЬ CREATE ================
-@method_decorator(csrf_exempt, name='dispatch')
-class CategoryCreateView(generic.CreateView):
-    model = Category
-    fields = ["name", ]
-    def post(self, request, *args, **kwargs):
-        category_data = json.loads(request.body)
-
-        category = Category.objects.create(
-            name=category_data["name"],
-        )
-
-        return JsonResponse({
-            "id": category.pk,
-            "name": category.name,
-        })
-
-
-
-
-
-
-
-
-
-# TODO CategoryUpdate =========== МОДЕЛЬ РЕДАКТИРОВАНИЯ КАТЕГОРИИ ===================
-@method_decorator(csrf_exempt, name='dispatch')
-class CategoryUpdateView(generic.UpdateView):
-    model = Category
-    fields = ["name", ]
-
-    def post(self, request, *args, **kwargs):
-        super().post(request, *args, **kwargs)
-
-        category_data = json.loads(request.body)
-
-        self.object.name = category_data["name"]
-        self.object.save()
-
-        return JsonResponse({
-            "id": self.object.pk,
-            "name": self.object.name,
-        })
-
-
-# TODO CategoryDelete =========== МОДЕЛЬ УДАЛЕНИЕ КАТЕГОРИИ ===================
-@method_decorator(csrf_exempt, name='dispatch')
-class CategoryDeleteView(generic.DeleteView):
-    model = Category
-    success_url = '/'
-
-    def delete(self, request, *args, **kwargs):
-        super().delete(request, *args, **kwargs)
-
-        return JsonResponse({"STATUS": "DELETED"})
-
-
-
-
-# TODO LocationDetail ====== МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
-# class LocationDetailView(generic.DetailView):
-#     model = Location
-#
-#     def get(self, request, *args, **kwargs):
-#         super().get(request, *args, **kwargs)
-#
-#         locations = self.get_object()
-#
-#         response = []
-#         for location in locations:
-#             response.append({
-#                 "name": location.name,
-#                 "lat": location.lat,
-#                 "lng": location.lng,
-#             })
-#
-#         return JsonResponse(response, safe=False)

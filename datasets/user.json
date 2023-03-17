@@ -1,6 +1,6 @@
 [
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Павел",
             "last_name": "Никифоров",
@@ -11,7 +11,7 @@
         }
     },
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Альбина",
             "last_name": "Игнатьева",
@@ -22,7 +22,7 @@
         }
     },
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Иван",
             "last_name": "Сысоев",
@@ -33,7 +33,7 @@
         }
     },
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Марина",
             "last_name": "Беркутова",
@@ -44,7 +44,7 @@
         }
     },
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Галина",
             "last_name": "Иванова",
@@ -55,7 +55,7 @@
         }
     },
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Петр",
             "last_name": "Бойченко",
@@ -66,7 +66,7 @@
         }
     },
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Никита",
             "last_name": "",
@@ -77,7 +77,7 @@
         }
     },
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Виолетта",
             "last_name": "Петушок",
@@ -88,7 +88,7 @@
         }
     },
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Гульнара",
             "last_name": "Ибрагимова",
@@ -99,7 +99,7 @@
         }
     },
     {
-        "model": "ads.user",
+        "model": "users.user",
         "fields": {
             "first_name": "Борис",
             "last_name": "Зайка",
