@@ -159,6 +159,8 @@ class AnnouncementDetailView(generic.DetailView):
             "price": announce.price,
             "description": announce.description,
             "is_published": announce.is_published,
+            "category": announce.category.name,
+            "image": announce.image.url if announce.image else None,
         })
 
 
@@ -228,7 +230,8 @@ class AnnouncementCreateView(generic.CreateView):
             price=announce_data["price"],
             description=announce_data["description"],
             is_published=announce_data["is_published"],
-            category=get_object_or_404(Category, pk=announce_data['category']),
+            category=get_object_or_404(Category, pk=announce_data["category"]),
+            # image=announce_data["image"]
         )
 
         return JsonResponse({
@@ -239,7 +242,7 @@ class AnnouncementCreateView(generic.CreateView):
             "price": announce.price,
             "description": announce.description,
             "is_published": announce.is_published,
-            # "image": self.object.image.url if self.object.image.url else None,
+            "image": announce.image.url if announce.image else None,
             "category_id": announce.category.pk,
         })
 
@@ -301,7 +304,30 @@ class CategoryUpdateView(generic.UpdateView):
     model = Category
     fields = ["name", ]
 
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
 
+        category_data = json.loads(request.body)
+
+        self.object.name = category_data["name"]
+        self.object.save()
+
+        return JsonResponse({
+            "id": self.object.pk,
+            "name": self.object.name,
+        })
+
+
+# TODO CategoryDelete =========== МОДЕЛЬ УДАЛЕНИЕ КАТЕГОРИИ ===================
+@method_decorator(csrf_exempt, name='dispatch')
+class CategoryDeleteView(generic.DeleteView):
+    model = Category
+    success_url = '/'
+
+    def delete(self, request, *args, **kwargs):
+        super().delete(request, *args, **kwargs)
+
+        return JsonResponse({"STATUS": "DELETED"})
 
 
 
