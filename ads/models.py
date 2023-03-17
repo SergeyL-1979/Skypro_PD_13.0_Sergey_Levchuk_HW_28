@@ -62,7 +62,7 @@ class Announcement(models.Model):
     price = models.FloatField(_("Цена"))
     description = models.TextField(_("Описание"))
     image = models.ImageField(_("Добавить фото"), upload_to="images")
-    is_published = models.BooleanField(_("is_published"))
+    is_published = models.BooleanField(_("is_published"), null=True)
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
 
     def image_(self):
