@@ -208,36 +208,43 @@ class UserCreateView(generic.CreateView):
             # "location": user.location,
             "location": list(map(str, users.location.all())),
         })
-# ===========================================================================================
 
-# TODO AnnouncementCreate ========= МОДЕЛЬ CREATE ================
+
+# AnnouncementCreate ========= МОДЕЛЬ CREATE READY ================
 @method_decorator(csrf_exempt, name='dispatch')
 class AnnouncementCreateView(generic.CreateView):
     model = Announcement
-    fields = ["name", "author", "price", "description", "is_published", "category", ]
-    def post(self, request, *args, **keyword):
+    fields = ["name", "author", "price", "description", "category", ]
+
+    def post(self, request, is_published=None, *args, **keyword):
         announce_data = json.loads(request.body)
+        # self.object = self.get_object()
+        # print(self.object, "SELF")
+        # self.object.image = request.FILES["image"]
 
         announce = Announcement.objects.create(
             name=announce_data["name"],
-            author=announce_data["author"],
+            author=get_object_or_404(User, pk=announce_data['author']),
             price=announce_data["price"],
             description=announce_data["description"],
             is_published=announce_data["is_published"],
-            catrgory=announce_data["category"]
+            category=get_object_or_404(Category, pk=announce_data['category']),
         )
 
         return JsonResponse({
             "id": announce.pk,
             "name": announce.name,
+            "author_id": announce.author.id,
             "author": announce.author.username,
             "price": announce.price,
             "description": announce.description,
             "is_published": announce.is_published,
+            # "image": self.object.image.url if self.object.image.url else None,
+            "category_id": announce.category.pk,
         })
 
 
-# TODO CategoryCreate ========= МОДЕЛЬ CREATE ================
+# CategoryCreate ========= МОДЕЛЬ CREATE ================
 @method_decorator(csrf_exempt, name='dispatch')
 class CategoryCreateView(generic.CreateView):
     model = Category
@@ -245,9 +252,6 @@ class CategoryCreateView(generic.CreateView):
     def post(self, request, *args, **kwargs):
         category_data = json.loads(request.body)
 
-        # category = Category()
-        # category.category_name = category_data["name"]
-        # category.save()
         category = Category.objects.create(
             name=category_data["name"],
         )
