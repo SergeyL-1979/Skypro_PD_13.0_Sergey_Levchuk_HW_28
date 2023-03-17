@@ -17,7 +17,7 @@ def root(request):
     return JsonResponse({"STATUS": "OK!"})
 
 
-# UserList ====== ГОТОВАЯ МОДЕЛЬ ======
+# UserList ================= ГОТОВАЯ МОДЕЛЬ ПОЛЬЗОВАТЕЛЯ ==================
 class UserListView(generic.ListView):
     """ Модель отображающая весь список пользователей и вывод на страницу не более 10 """
     model = User
@@ -54,7 +54,78 @@ class UserListView(generic.ListView):
         return JsonResponse(response, safe=False)
 
 
-# AnnouncementList ======= ГООТОВАЯ МОДЕЛЬ =======
+# UserDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ПОЛЬЗОВАТЕЛЯ ==============
+class UserDetailView(generic.DetailView):
+    """ Отображает детальную информацию об объекте """
+    model = User
+
+    def get(self, request, *args, **kwargs):
+        users = self.get_object()
+
+        return JsonResponse({
+            "first_name": users.first_name,
+            "last_name": users.last_name,
+            "username": users.username,
+            "password": users.password,
+            "role": users.role,
+            "age": users.age,
+            # "location": users.location.name,
+            "location": list(map(str, users.location.all())),
+        })
+
+
+# UserCreate ====== МОДЕЛЬ СОЗДАНИЯ ПОЛЬЗОВАТЕЛЯ =========================
+@method_decorator(csrf_exempt, name='dispatch')
+class UserCreateView(generic.CreateView):
+    model = User
+    fields = ["first_name", "last_name", "username", "password", "role", "age", "location", ]
+
+    def post(self, request, *args, **kwargs):
+        user_data = json.loads(request.body)
+
+        users = User.objects.create(
+            first_name=user_data["first_name"],
+            last_name=user_data["last_name"],
+            username=user_data["username"],
+            password=user_data["password"],
+            role=user_data["role"],
+            age=user_data["age"],
+            # location=user_data["location"],
+        )
+
+        users.save()
+
+        return JsonResponse({
+            "id": users.pk,
+            "first_name": users.first_name,
+            "last_name": users.last_name,
+            "username": users.username,
+            "password": users.password,
+            "role": users.role,
+            "age": users.age,
+            # "location": user.location,
+            "location": list(map(str, users.location.all())),
+        })
+
+
+# TODO UserUpdate ==================== МОДЕЛЬ РЕДАКТИРОВАНИЯ =====================
+@method_decorator(csrf_exempt, name='dispatch')
+class UserUpdateView(generic.UpdateView):
+    model = User
+    fields = ["first_name", "last_name", "username", "role", "age", "location", "image", ]
+
+
+# TODO UserDelete ==================== МОДЕЛЬ УДАЛЕНИЕ =====================
+@method_decorator(csrf_exempt, name='dispatch')
+class UserDeleteView(generic.DeleteView):
+    model = User
+    success_url = '/'
+
+
+
+# ================== ПОЛЬЗОВАТЕЛЬ ЗАВЕРШЕН =======================================================
+
+# AnnouncementList ================= ГОТОВАЯ МОДЕЛЬ ОБЪЯВЛЕНИЯ ========================
 class AnnouncementListView(generic.ListView):
     """ Модель отображающая весь список объектов и вывод на страницу не более 10 """
     model = Announcement
@@ -86,6 +157,108 @@ class AnnouncementListView(generic.ListView):
         }
         return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
 
+
+# AnnouncementDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
+class AnnouncementDetailView(generic.DetailView):
+    """ Вывод детальной информации одной карточки объявления """
+    model = Announcement
+
+    def get(self, request, *args, **kwargs):
+        announce = self.get_object()
+
+        return JsonResponse({
+            "id": announce.pk,
+            "name": announce.name,
+            "author": announce.author.username,
+            "price": announce.price,
+            "description": announce.description,
+            "is_published": announce.is_published,
+            "category": announce.category.name,
+            "image": announce.image.url if announce.image else None,
+        })
+
+
+# AnnouncementCreate ========= МОДЕЛЬ CREATE READY ================
+@method_decorator(csrf_exempt, name='dispatch')
+class AnnouncementCreateView(generic.CreateView):
+    model = Announcement
+    fields = ["name", "author", "price", "description", "category", "image"]
+
+    def post(self, request, is_published=None, *args, **keyword):
+        # super().post(request, **keyword)
+        announce_data = json.loads(request.body)
+        # self.object = self.get_object()
+        # print(self.object, "SELF")
+
+        announce = Announcement.objects.create(
+            name=announce_data["name"],
+            author=get_object_or_404(User, pk=announce_data['author']),
+            price=announce_data["price"],
+            description=announce_data["description"],
+            is_published=announce_data["is_published"],
+            category=get_object_or_404(Category, pk=announce_data["category"]),
+            # image=announce_data["image"]
+        )
+        # self.object.image = request.FILES["image"]
+        # self.object.save()
+
+        return JsonResponse({
+            "id": announce.pk,
+            "name": announce.name,
+            "author_id": announce.author.id,
+            "author": announce.author.username,
+            "price": announce.price,
+            "description": announce.description,
+            "is_published": announce.is_published,
+            "image": announce.image.url if announce.image else None,
+            "category_id": announce.category.pk,
+        })
+
+
+# TODO AnnouncementUpdate ============= МОДЕЛЬ РЕДАКТИРОВАНИЯ ОБЪЯВЛЕНИЯ ===========================
+@method_decorator(csrf_exempt, name='dispatch')
+class AnnouncementUpdateView(generic.CreateView):
+    model = Announcement
+    fields = ["name", "author", "price", "description", "is_published", "category", "image"]
+
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+
+        announce_data = json.loads(request.body)
+
+        self.object.name = announce_data["name"]
+        self.object.author = announce_data["author"]
+        self.object.price = announce_data["price"]
+        self.object.description = announce_data["description"]
+        self.object.is_published = announce_data["is_published"]
+        self.object.category = announce_data["category"]
+        self.object.image = announce_data["image"]
+
+        self.object.save()
+
+        return JsonResponse({
+            "name": self.object.name,
+            "author": self.object.author,
+            "price": self.object.price,
+            "description": self.object.description,
+            "is_published": self.object.is_published,
+            "category": self.object.category,
+            "image": self.object.image.url if self.object.image else None,
+        })
+
+
+# AnnouncementDelete ============= МОДЕЛЬ УДАЛЕНИЕ ОБЪЯВЛЕНИЯ ===========================
+@method_decorator(csrf_exempt, name='dispatch')
+class AnnouncementDeleteView(generic.DeleteView):
+    model = Announcement
+    success_url = 'ads/'
+
+    def delete(self, request, *args, **kwargs):
+        super().delete(request, *args, **kwargs)
+
+        return JsonResponse({"STATUS": "DELETE"})
+
+# ============================ ЗАВЕРШЕНА МОДЕЛЬ ОБЪЯВЛЕНИЯ ===========================================
 
 # CategoryList ======== ГОТОВАЯ МОДЕЛЬ ========
 @method_decorator(csrf_exempt, name='dispatch')
@@ -124,44 +297,9 @@ class LocationListView(generic.ListView):
         return JsonResponse(response, safe=False)
 
 
-# UserDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
-class UserDetailView(generic.DetailView):
-    """ Отображает детальную информацию об объекте """
-    model = User
-
-    def get(self, request, *args, **kwargs):
-        users = self.get_object()
-
-        return JsonResponse({
-            "first_name": users.first_name,
-            "last_name": users.last_name,
-            "username": users.username,
-            "password": users.password,
-            "role": users.role,
-            "age": users.age,
-            # "location": users.location.name,
-            "location": list(map(str, users.location.all())),
-        })
 
 
-# AnnouncementDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
-class AnnouncementDetailView(generic.DetailView):
-    """ Вывод детальной информации одной карточки объявления """
-    model = Announcement
 
-    def get(self, request, *args, **kwargs):
-        announce = self.get_object()
-
-        return JsonResponse({
-            "id": announce.pk,
-            "name": announce.name,
-            "author": announce.author.username,
-            "price": announce.price,
-            "description": announce.description,
-            "is_published": announce.is_published,
-            "category": announce.category.name,
-            "image": announce.image.url if announce.image else None,
-        })
 
 
 # CategoryDetail ====== ГОТОВАЯ МОДЕЛЬ ДЕТАЛИЗАЦИИ ==============
@@ -178,73 +316,10 @@ class CategoryDetailView(generic.DetailView):
         })
 
 
-# UserCreate ====== МОДЕЛЬ СОЗДАНИЯ =========================
-@method_decorator(csrf_exempt, name='dispatch')
-class UserCreateView(generic.CreateView):
-    model = User
-    fields = ["first_name", "last_name", "username", "password", "role", "age", "location", ]
-
-    def post(self, request, *args, **kwargs):
-        user_data = json.loads(request.body)
-
-        users = User.objects.create(
-            first_name=user_data["first_name"],
-            last_name=user_data["last_name"],
-            username=user_data["username"],
-            password=user_data["password"],
-            role=user_data["role"],
-            age=user_data["age"],
-            # location=user_data["location"],
-        )
-
-        users.save()
-
-        return JsonResponse({
-            "id": users.pk,
-            "first_name": users.first_name,
-            "last_name": users.last_name,
-            "username": users.username,
-            "password": users.password,
-            "role": users.role,
-            "age": users.age,
-            # "location": user.location,
-            "location": list(map(str, users.location.all())),
-        })
 
 
-# AnnouncementCreate ========= МОДЕЛЬ CREATE READY ================
-@method_decorator(csrf_exempt, name='dispatch')
-class AnnouncementCreateView(generic.CreateView):
-    model = Announcement
-    fields = ["name", "author", "price", "description", "category", ]
 
-    def post(self, request, is_published=None, *args, **keyword):
-        announce_data = json.loads(request.body)
-        # self.object = self.get_object()
-        # print(self.object, "SELF")
-        # self.object.image = request.FILES["image"]
 
-        announce = Announcement.objects.create(
-            name=announce_data["name"],
-            author=get_object_or_404(User, pk=announce_data['author']),
-            price=announce_data["price"],
-            description=announce_data["description"],
-            is_published=announce_data["is_published"],
-            category=get_object_or_404(Category, pk=announce_data["category"]),
-            # image=announce_data["image"]
-        )
-
-        return JsonResponse({
-            "id": announce.pk,
-            "name": announce.name,
-            "author_id": announce.author.id,
-            "author": announce.author.username,
-            "price": announce.price,
-            "description": announce.description,
-            "is_published": announce.is_published,
-            "image": announce.image.url if announce.image else None,
-            "category_id": announce.category.pk,
-        })
 
 
 # CategoryCreate ========= МОДЕЛЬ CREATE ================
@@ -265,37 +340,11 @@ class CategoryCreateView(generic.CreateView):
         })
 
 
-# TODO UserUpdate ==================== МОДЕЛЬ РЕДАКТИРОВАНИЯ =====================
 
 
 
 
-# TODO AnnouncementUpdate ============= МОДЕЛЬ UPDATE ===========================
-@method_decorator(csrf_exempt, name='dispatch')
-class AnnouncementUpdateView(generic.CreateView):
-    model = Announcement
-    fields = ["name", "author", "price", "description", "is_published", "category", ]
 
-    def patch(self, request, *args, **kwargs):
-        super().post(request, *args, **kwargs)
-
-        announce_data = json.loads(request.body)
-
-        self.object.name = announce_data["name"]
-        self.object.author = announce_data["author"]
-        self.object.price = announce_data["price"]
-        self.object.description = announce_data["description"]
-        self.object.is_published = announce_data["is_published"]
-        self.object.category = announce_data["category"]
-
-        return JsonResponse({
-            "name": self.object.name,
-            "author": self.object.author,
-            "price": self.object.price,
-            "description": self.object.description,
-            "is_published": self.object.is_published,
-            "category": self.object.category,
-        })
 
 
 # TODO CategoryUpdate =========== МОДЕЛЬ РЕДАКТИРОВАНИЯ КАТЕГОРИИ ===================

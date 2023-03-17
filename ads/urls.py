@@ -12,7 +12,7 @@ urlpatterns = [
     path('ad/<int:pk>/', views.AnnouncementDetailView.as_view(), name='announce_detail'),
     path('ad/create/', views.AnnouncementCreateView.as_view(), name='create_announce'),
     path('ad/update/<int:pk>/', views.AnnouncementUpdateView.as_view(), name='announce_update'),
-    # path('ad/delete/<int:pk>/', views.AnnouncementDeleteView.as_view(), name='announce_delete'),
+    path('ad/delete/<int:pk>/', views.AnnouncementDeleteView.as_view(), name='announce_delete'),
 
 
     path('cat/', views.CategoryListView.as_view(), name='category_list'),
