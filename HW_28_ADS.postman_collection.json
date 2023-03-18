@@ -1,0 +1,581 @@
+{
+	"info": {
+		"_postman_id": "72c9aaf5-881e-4d0e-9a31-0f6f535c5884",
+		"name": "HW_28_ADS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "23787636"
+	},
+	"item": [
+		{
+			"name": "ОБЪЯВЛЕНИЯ(Announcement)",
+			"item": [
+				{
+					"name": "GET_ВСЕ_ОБЯВЛЕНИЯ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/ad/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"ad",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_ДЕТАЛЬНАЯ_ОБЯВЛЕНИЯ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/ad/15/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"ad",
+								"15",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_ДОБАВИТЬ_ОБЪЯВЛЕНИЕ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"CAT\",\r\n    \"author\": 11,\r\n    \"price\": 250000,\r\n    \"description\": \"КОТИКИК 54\",\r\n    \"is_published\": false,\r\n    \"category\": 6\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/ad/create/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"ad",
+								"create",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_РЕДАКТИРОВАТЬ_ФОТО_ОБЪЯВЛЕНИЕ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/ad/upload_image/23/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"ad",
+								"upload_image",
+								"23",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_РЕДАКТИРОВАТЬ_ОБЪЯВЛЕНИЕ_не изменяет автора и категорию",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"Новой железо\",\r\n    \"author\": 1,\r\n    \"price\": 2,\r\n    \"description\": \"Ссовсем новое\",\r\n    \"category\": 3\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/ad/update/22/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"ad",
+								"update",
+								"22",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE_УДАЛЕНИЕ_ОБЪЯВЛЕНИЕ",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"TOLSTOVKA2000\",\r\n    \"author\": 1,\r\n    \"price\": 250200,\r\n    \"description\": \"NEWQQQ\",\r\n    \"is_published\": true,\r\n    \"category\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/ad/delete/23/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"ad",
+								"delete",
+								"23",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "КАТЕГОРИИ(Category)",
+			"item": [
+				{
+					"name": "GET_ВСЕ_КАТЕГОРИИ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/cat/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"cat",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_ДЕТАЛЬНАЯ_КАТЕГОРИИ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/cat/4/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"cat",
+								"4",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_ДОБАВИТЬ_КАТЕГОРИИ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Антиквариат\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/cat/create/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"cat",
+								"create",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_РЕДАКТИРОВАТЬ_КАТЕГОРИИ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Новая категория\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/cat/update/6/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"cat",
+								"update",
+								"6",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE_УДАЛИТЬ_КАТЕГОРИИ",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"YJASDAS\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/cat/delete/7/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"cat",
+								"delete",
+								"7",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ПОЛЬЗОВАТЕЛИ(User)",
+			"item": [
+				{
+					"name": "GET_ВСЕ_ПОЛЬЗОВАТЕЛИ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_ДЕТАЛЬНАЯ_ПОЛЬЗОВАТЕЛЯ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/5",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"5"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_ДОБАВИТЬ_ПОЛЬЗОВАТЕЛЯ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"Test2\",\r\n    \"last_name\": \"Last2\",\r\n    \"username\": \"neima\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"moderator\",\r\n    \"age\": \"535\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/create/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"create",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST_РЕДАКТИРОВАНИЕ_ПОЛЬЗОВАТЕЛЯ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"first_name\": \"Tewwwst\",\r\n    \"last_name\": \"Lawwwst\",\r\n    \"username\": \"teswwwwwwwwwtlast\",\r\n    \"password\": \"1234ww56\",\r\n    \"role\": \"moderator\",\r\n    \"age\": \"5675\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/update/13/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"update",
+								"13",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE_УДАЛЕНИЕ_ПОЛЬЗОВАТЕЛЯ",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\":\"TOLSTOVKA2000\",\r\n    \"author\": 1,\r\n    \"price\": 250200,\r\n    \"description\": \"NEWQQQ\",\r\n    \"is_published\": true,\r\n    \"category\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/delete/13/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"delete",
+								"13",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_ВЫВОД_КОЛЛИЧСТВА_ОБЪЯВЛЕНИЙ_ПОЛЬЗОВАТЕЛЯ",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/by_user/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"by_user",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "МЕСТОПОЛОЖЕНИЕ(Location)",
+			"item": [
+				{
+					"name": "GET_ВСЕ_LOCATION",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/location/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"location",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GET_ДЕТАЛЬНАЯ_LOCATION",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://127.0.0.1:8000/users/location/10/",
+							"protocol": "http",
+							"host": [
+								"127",
+								"0",
+								"0",
+								"1"
+							],
+							"port": "8000",
+							"path": [
+								"users",
+								"location",
+								"10",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
