@@ -125,13 +125,13 @@
 					"response": []
 				},
 				{
-					"name": "POST_РЕДАКТИРОВАТЬ_ОБЪЯВЛЕНИЕ_не изменяет автора и категорию",
+					"name": "POST_РЕДАКТИРОВАТЬ_ОБЪЯВЛЕНИЕ",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name\":\"Новой железо\",\r\n    \"author\": 1,\r\n    \"price\": 2,\r\n    \"description\": \"Ссовсем новое\",\r\n    \"category\": 3\r\n}",
+							"raw": "{\r\n    \"name\":\"220 объявление на редакции\",\r\n    \"author\": 11,\r\n    \"price\": 2222,\r\n    \"description\": \"Новый пользователь под номером 11 и категория 6\",\r\n    \"category\": 6\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
