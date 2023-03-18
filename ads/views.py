@@ -147,10 +147,10 @@ class AnnouncementUpdateView(generic.CreateView):
         announce_data = json.loads(request.body)
 
         self.object.name = announce_data["name"]
-        self.object.author.pk = announce_data["author"] # не изменяет данные
+        self.object.author = get_object_or_404(User, pk=announce_data["author"])
         self.object.price = announce_data["price"]
         self.object.description = announce_data["description"]
-        self.object.category.pk = announce_data["category"] # не изменяет данные
+        self.object.category = get_object_or_404(Category, pk=announce_data["category"])
 
         self.object.save()
 
