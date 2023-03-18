@@ -74,7 +74,6 @@ class UserDetailView(generic.DetailView):
 class UserAdsDetailView(View):
     def get(self, request):
         user_qs = User.objects.annotate(announce=Count('announcement'))
-        print(user_qs, 'query')
 
         paginator = Paginator(user_qs, settings.TOTAL_ON_PAGE)
         page_number = request.GET.get("page")
@@ -137,7 +136,7 @@ class UserCreateView(generic.CreateView):
         })
 
 
-# TODO UserUpdate ==================== МОДЕЛЬ РЕДАКТИРОВАНИЯ =====================
+# UserUpdate ==================== МОДЕЛЬ РЕДАКТИРОВАНИЯ =====================
 @method_decorator(csrf_exempt, name='dispatch')
 class UserUpdateView(generic.UpdateView):
     model = User

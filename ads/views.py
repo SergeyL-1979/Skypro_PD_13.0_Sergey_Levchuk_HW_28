@@ -91,7 +91,7 @@ class AnnouncementCreateView(generic.CreateView):
             category=get_object_or_404(Category, pk=announce_data["category"]),
             # image=announce_data["image"]
         )
-        # self.object.image = request.FILES["image"]
+        # self.object.image = request.FILES["image"] # как сделать при создании добавить фото?
         # self.object.save()
 
         return JsonResponse({
@@ -109,7 +109,8 @@ class AnnouncementCreateView(generic.CreateView):
 
 # AnnouncementUpdateImage ================ ОБНОВИТЬ ФОТО ОБЪЯВЛЕНИЯ ====================
 @method_decorator(csrf_exempt, name='dispatch')
-class AnnouncementUpdateImageView(generic.CreateView):
+class AnnouncementUpdateImageView(generic.UpdateView):
+    """ Дополнительная модель на добавление/изменение фото в объявлении"""
     model = Announcement
     fields = ["name", "image"]
 
