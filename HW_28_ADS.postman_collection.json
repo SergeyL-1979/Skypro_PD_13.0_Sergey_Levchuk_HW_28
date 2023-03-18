@@ -100,12 +100,12 @@
 								{
 									"key": "image",
 									"type": "file",
-									"src": []
+									"src": "/C:/Users/sergd/OneDrive/Изображения/Снимки экрана/space_640.jpg"
 								}
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/ad/upload_image/23/",
+							"raw": "http://127.0.0.1:8000/ad/upload_image/21/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -117,7 +117,7 @@
 							"path": [
 								"ad",
 								"upload_image",
-								"23",
+								"21",
 								""
 							]
 						}
@@ -436,7 +436,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"Tewwwst\",\r\n    \"last_name\": \"Lawwwst\",\r\n    \"username\": \"teswwwwwwwwwtlast\",\r\n    \"password\": \"1234ww56\",\r\n    \"role\": \"moderator\",\r\n    \"age\": \"5675\"\r\n}",
+							"raw": "{\r\n    \"first_name\": \"Поменяли\",\r\n    \"last_name\": \"Изменили\",\r\n    \"username\": \"nikaname\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"member\",\r\n    \"age\": \"5\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -444,7 +444,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/users/update/13/",
+							"raw": "http://127.0.0.1:8000/users/update/14/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -456,7 +456,7 @@
 							"path": [
 								"users",
 								"update",
-								"13",
+								"14",
 								""
 							]
 						}
@@ -498,7 +498,7 @@
 					"response": []
 				},
 				{
-					"name": "GET_ВЫВОД_КОЛЛИЧСТВА_ОБЪЯВЛЕНИЙ_ПОЛЬЗОВАТЕЛЯ",
+					"name": "GET_ВЫВОД_КОЛИЧЕСТВО_ОБЪЯВЛЕНИЙ_ПОЛЬЗОВАТЕЛЯ",
 					"request": {
 						"method": "GET",
 						"header": [],
