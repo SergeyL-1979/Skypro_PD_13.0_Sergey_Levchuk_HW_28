@@ -116,26 +116,28 @@ class AnnouncementUpdateView(generic.CreateView):
 
     def post(self, request, *args, **kwargs):
         super().post(request, *args, **kwargs)
+        self.object = self.get_object()
 
         announce_data = json.loads(request.body)
 
         self.object.name = announce_data["name"]
-        self.object.author = announce_data["author"]
+        self.object.author.pk = announce_data["author"]
         self.object.price = announce_data["price"]
         self.object.description = announce_data["description"]
-        self.object.is_published = announce_data["is_published"]
-        self.object.category = announce_data["category"]
-        self.object.image = announce_data["image"]
+        self.object.category.pk = announce_data["category"]
 
         self.object.save()
 
         return JsonResponse({
+            "id": self.object.pk,
             "name": self.object.name,
-            "author": self.object.author,
+            "author_id": self.object.author.id,
+            "author": self.object.author.first_name,
             "price": self.object.price,
             "description": self.object.description,
             "is_published": self.object.is_published,
-            "category": self.object.category,
+            "category_id": self.object.category.pk,
+            "category": self.object.category.name,
             "image": self.object.image.url if self.object.image else None,
         })
 
