@@ -1,9 +1,5 @@
 from django.urls import path
-from ads import views
-# from .views import (
-#     AnnouncementListView, AnnouncementsDetailView,
-#     AnnouncementsCreateView, AnnouncementsUpdateView, LocationListView, CategoryCreateView,
-#     CategoryListView, CategoryUpdateView, CategoryDetailView, UserListView, UserDetailView)
+
 from ads import views
 
 urlpatterns = [
