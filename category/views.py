@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views import generic
 
+from avito import settings
 from category.models import Category
 
 
@@ -15,15 +16,29 @@ from category.models import Category
 @method_decorator(csrf_exempt, name='dispatch')
 class CategoryListView(generic.ListView):
     """ Модель отображает все объекты """
-    def get(self, request, *args, **kwargs):
-        categories = Category.objects.all()
+    model = Category
 
-        response = []
-        for category in categories:
-            response.append({
+    def get(self, request, *args, **kwargs):
+        super().get(request, *args, **kwargs)
+
+        self.object_list = self.object_list.order_by("name")
+
+        paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        category_list = []
+        for category in page_obj:
+            category_list.append({
                 "id": category.pk,
                 "name": category.name,
             })
+
+        response = {
+            "items": category_list,
+            "total": paginator.count,
+            "num_page": paginator.num_pages,
+        }
         return JsonResponse(response, safe=False, json_dumps_params={"ensure_ascii": False})
 
 

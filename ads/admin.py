@@ -13,7 +13,7 @@ class AnnouncementAdmin(admin.ModelAdmin):
     list_display = ('name', 'author', 'price', 'image_', 'category', 'is_published', )
     readonly_fields = ('image_', )
     raw_username_fields = ('author', )
-    list_filter = ('category', )
+    list_filter = ('category', 'author', )
     ordering = ('-price', )
     list_per_page = 5
     list_max_show_all = 50

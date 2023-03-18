@@ -25,7 +25,7 @@ class AnnouncementListView(generic.ListView):
         super().get(request, *args, **kwargs)
         # announce = Announcement.objects.all()
 
-        self.object_list = self.object_list.select_related('author').order_by("name")
+        self.object_list = self.object_list.select_related('author').order_by("-price")
         # ========= ПАГИНАЦИЯ С ПОМОЩЬЮ DJANGO ===============
         paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
         page_number = request.GET.get("page")
@@ -107,6 +107,31 @@ class AnnouncementCreateView(generic.CreateView):
             "category": announce.category.name,
         })
 
+# AnnouncementUpdateImage ================ ОБНОВИТЬ ФОТО ОБЪЯВЛЕНИЯ ====================
+@method_decorator(csrf_exempt, name='dispatch')
+class AnnouncementUpdateImageView(generic.CreateView):
+    model = Announcement
+    fields = ["name", "image"]
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        self.object.image = request.FILES["image"]
+        self.object.save()
+
+        return JsonResponse({
+            "id": self.object.pk,
+            "name": self.object.name,
+            "author_id": self.object.author.id,
+            "author": self.object.author.first_name,
+            "price": self.object.price,
+            "description": self.object.description,
+            "is_published": self.object.is_published,
+            "category_id": self.object.category.pk,
+            "category": self.object.category.name,
+            "image": self.object.image.url if self.object.image else None,
+        })
+
 
 # TODO AnnouncementUpdate ============= МОДЕЛЬ РЕДАКТИРОВАНИЯ ОБЪЯВЛЕНИЯ ===========================
 @method_decorator(csrf_exempt, name='dispatch')
@@ -121,10 +146,10 @@ class AnnouncementUpdateView(generic.CreateView):
         announce_data = json.loads(request.body)
 
         self.object.name = announce_data["name"]
-        self.object.author.pk = announce_data["author"]
+        self.object.author.pk = announce_data["author"] # не изменяет данные
         self.object.price = announce_data["price"]
         self.object.description = announce_data["description"]
-        self.object.category.pk = announce_data["category"]
+        self.object.category.pk = announce_data["category"] # не изменяет данные
 
         self.object.save()
 

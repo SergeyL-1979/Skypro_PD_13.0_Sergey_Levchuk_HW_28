@@ -1,13 +1,14 @@
 import json
 
 from django.core.paginator import Paginator
+from django.db.models import Count, Avg
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
 
 from django.views.decorators.csrf import csrf_exempt
 
-from django.views import generic
+from django.views import generic, View
 
 from users.models import Location, User
 from avito import settings
@@ -70,6 +71,38 @@ class UserDetailView(generic.DetailView):
             "location": list(map(str, users.location.all())),
         })
 
+class UserAdsDetailView(View):
+    def get(self, request):
+        user_qs = User.objects.annotate(announce=Count('announcement'))
+        print(user_qs, 'query')
+
+        paginator = Paginator(user_qs, settings.TOTAL_ON_PAGE)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
+
+        users = []
+        for user in page_obj:
+            users.append({
+                "id": user.pk,
+                "username": user.username,
+                "first_name": user.first_name,
+                "last_name": user.last_name,
+                "role": user.role,
+                "age": user.age,
+                "location": list(map(str, user.location.all())),
+                "total_ads": user.announce,
+            })
+
+        response = {
+            "items": users,
+            "total": paginator.count,
+            "num_page": paginator.num_pages,
+            "avg": user_qs.aggregate(avg=Avg('announcement'))['avg']
+        }
+
+        return JsonResponse(response, safe=False)
+
+
 
 # UserCreate ====== МОДЕЛЬ СОЗДАНИЯ ПОЛЬЗОВАТЕЛЯ =========================
 @method_decorator(csrf_exempt, name='dispatch')
@@ -87,7 +120,7 @@ class UserCreateView(generic.CreateView):
             password=user_data["password"],
             role=user_data["role"],
             age=user_data["age"],
-            # location=user_data["location"],
+            # location=user_data["location"], # как добавить локации из POSTMAN?
         )
 
         users.save()
@@ -100,7 +133,6 @@ class UserCreateView(generic.CreateView):
             "password": users.password,
             "role": users.role,
             "age": users.age,
-            # "location": user.location,
             "location": list(map(str, users.location.all())),
         })
 
@@ -116,22 +148,18 @@ class UserUpdateView(generic.UpdateView):
 
         user_data = json.loads(request.body)
 
-        self.object.pk=user_data["pk"]
         self.object.first_name=user_data["first_name"]
         self.object.last_name=user_data["last_name"]
         self.object.username=user_data["username"]
         self.object.password=user_data["password"]
         self.object.role=user_data["role"]
         self.object.age=user_data["age"]
-        self.object.location=user_data["location"]
         self.object.save()
-
-
 
         return JsonResponse({
             "id": self.object.pk,
             "first_name": self.object.first_name,
-            "last_name": self.objectlast_name,
+            "last_name": self.object.last_name,
             "username": self.object.username,
             "password": self.object.password,
             "role": self.object.role,
