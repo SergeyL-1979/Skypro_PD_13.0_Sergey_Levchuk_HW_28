@@ -1,11 +1,11 @@
 # Skypro_PD_13.0_Sergey_Levchuk_HW_28
 
 ## НЕУДАЛОСЬ РЕАЛИЗОВАТЬ СЛЕДУЮЩИЕ:
-1. POST_РЕДАКТИРОВАТЬ_ОБЪЯВЛЕНИЕ_не изменяет автора и категорию
-2. При создании ОБЪЯВЛЕНИЯ(AnnouncementCreateView) не получилось сразу добавить фото. Реализовал через дополнительный 
-3. Не могу понять что за ошибка? **users\views.py:79: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'users.models.User'> QuerySet.
+
+1. При создании ОБЪЯВЛЕНИЯ(AnnouncementCreateView) не получилось сразу добавить фото. Реализовал через дополнительный класс 
+2. Не могу понять что за ошибка? **users\views.py:79: UnorderedObjectListWarning: Pagination may yield inconsistent results with an unordered object_list: <class 'users.models.User'> QuerySet.
   paginator = Paginator(user_qs, settings.TOTAL_ON_PAGE)**
-4. ШАГ 7 - скорее всего сделан неправильно. Как выполнить подсчет объявлений с помощью **is_published=True**, моих знаний не хватило.
+3. ШАГ 7 - скорее всего сделан неправильно. Как выполнить подсчет объявлений с помощью **is_published=True**, моих знаний не хватило.
 
 
 # Шаг 1
