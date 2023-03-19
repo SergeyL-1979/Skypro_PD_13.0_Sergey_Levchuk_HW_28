@@ -39,7 +39,9 @@ class AnnouncementListView(generic.ListView):
                 "author": i.author.username,
                 "price": i.price,
                 "description": i.description,
-                "category": i.category_id
+                "category": i.category_id,
+                "location": list(map(str, i.author.location.all())),
+
             })
 
         response = {
@@ -67,6 +69,7 @@ class AnnouncementDetailView(generic.DetailView):
             "is_published": announce.is_published,
             "category": announce.category.name,
             "image": announce.image.url if announce.image else None,
+            "location": list(map(str, announce.author.location.all())),
         })
 
 
