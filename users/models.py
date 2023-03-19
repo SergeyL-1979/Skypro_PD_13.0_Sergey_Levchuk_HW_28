@@ -30,8 +30,8 @@ class User(models.Model):
 class Location(models.Model):
     """ Модель местоположения """
     name = models.CharField(_("Местоположение"), max_length=50)
-    lat = models.FloatField(_("lat"))
-    lng = models.FloatField(_("lng"))
+    lat = models.FloatField(_("lat"), null=True)
+    lng = models.FloatField(_("lng"), null=True)
     # lat = models.DecimalField(_("lat"), max_digits=8, decimal_places=8, null=True)
     # lng = models.DecimalField(_("lng"), max_digits=8, decimal_places=8, null=True)
 
