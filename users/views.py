@@ -1,7 +1,7 @@
 import json
 
 from django.core.paginator import Paginator
-from django.db.models import Count, Avg
+from django.db.models import Count, Avg, Q
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
@@ -23,8 +23,10 @@ class UserListView(generic.ListView):
     def get(self, request, *args, **kwargs):
         super().get(request, *args, **kwargs)
 
-        # users = User.objects.all()
+        # user_qs = User.objects.all().order_by("username")
+
         self.object_list = self.object_list.prefetch_related('location').order_by("username")
+
         # ========= ПАГИНАЦИЯ С ПОМОЩЬЮ DJANGO ===============
         paginator = Paginator(self.object_list, settings.TOTAL_ON_PAGE)
         page_number = request.GET.get("page")
@@ -73,11 +75,11 @@ class UserDetailView(generic.DetailView):
 
 class UserAdsDetailView(View):
     def get(self, request):
-        user_qs = User.objects.annotate(announce=Count('announcement'))
+        user_qs = User.objects.annotate(announce=Count('announcement'), filter=Q(announcement__is_published__exact=True))
 
         paginator = Paginator(user_qs, settings.TOTAL_ON_PAGE)
         page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+        page_obj = paginator.get_page(page_number )
 
         users = []
         for user in page_obj:
