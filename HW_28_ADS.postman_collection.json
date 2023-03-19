@@ -11,9 +11,16 @@
 			"item": [
 				{
 					"name": "GET_ВСЕ_ОБЯВЛЕНИЯ",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
 					"request": {
 						"method": "GET",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "http://127.0.0.1:8000/ad/",
 							"protocol": "http",
@@ -404,7 +411,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"first_name\": \"Test2\",\r\n    \"last_name\": \"Last2\",\r\n    \"username\": \"neima\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"moderator\",\r\n    \"age\": \"535\"\r\n}",
+							"raw": "{\r\n    \"first_name\": \"GODVIN\",\r\n    \"last_name\": \"Negr\",\r\n    \"username\": \"neima\",\r\n    \"role\": \"member\",\r\n    \"age\": 52,\r\n    \"location\": [\r\n        \"Москва, м. Электрозаодская\", \"Марс\"\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"

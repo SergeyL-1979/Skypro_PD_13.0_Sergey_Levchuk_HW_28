@@ -114,27 +114,23 @@ class UserCreateView(generic.CreateView):
     def post(self, request, *args, **kwargs):
         user_data = json.loads(request.body)
 
-        users = User.objects.create(
-            first_name=user_data["first_name"],
-            last_name=user_data["last_name"],
-            username=user_data["username"],
-            password=user_data["password"],
-            role=user_data["role"],
-            age=user_data["age"],
-            # location=user_data["location"], # как добавить локации из POSTMAN?
-        )
-
-        users.save()
+        # При создании модели можно в списке прописать несколько локаций,
+        # если таковой нет то добавить локацию в таблицу
+        locations = user_data.pop("location")
+        user = User.objects.create(**user_data)
+        for loc_name in locations:
+            loc, _ = Location.objects.get_or_create(name=loc_name)
+            user.location.add(loc)
 
         return JsonResponse({
-            "id": users.pk,
-            "first_name": users.first_name,
-            "last_name": users.last_name,
-            "username": users.username,
-            "password": users.password,
-            "role": users.role,
-            "age": users.age,
-            "location": list(map(str, users.location.all())),
+            "id": user.pk,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "username": user.username,
+            "password": user.password,
+            "role": user.role,
+            "age": user.age,
+            "location": list(map(str, user.location.all())),
         })
 
 
@@ -144,10 +140,12 @@ class UserUpdateView(generic.UpdateView):
     model = User
     fields =  ["first_name", "last_name", "username", "password", "role", "age", "location", ]
 
-    def post(self, request, *args, **kwargs):
+    def patch(self, request, *args, **kwargs):
         super().post(request, *args, **kwargs)
 
         user_data = json.loads(request.body)
+        # locations = user_data.pop("location")
+        # user = User.objects.filter(location=locations)
 
         self.object.first_name=user_data["first_name"]
         self.object.last_name=user_data["last_name"]
@@ -155,6 +153,11 @@ class UserUpdateView(generic.UpdateView):
         self.object.password=user_data["password"]
         self.object.role=user_data["role"]
         self.object.age=user_data["age"]
+        # if "location" in user_data:
+        #     self.object.location.all().delete()
+        #     for loc_name in user_data.get("location"):
+        #         loc, _ = Location.objects.get_or_create(name=loc_name)
+        #         self.object.location.add(loc)
         self.object.save()
 
         return JsonResponse({
