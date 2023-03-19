@@ -144,8 +144,6 @@ class UserUpdateView(generic.UpdateView):
         super().post(request, *args, **kwargs)
 
         user_data = json.loads(request.body)
-        # locations = user_data.pop("location")
-        # user = User.objects.filter(location=locations)
 
         self.object.first_name=user_data["first_name"]
         self.object.last_name=user_data["last_name"]
@@ -153,11 +151,11 @@ class UserUpdateView(generic.UpdateView):
         self.object.password=user_data["password"]
         self.object.role=user_data["role"]
         self.object.age=user_data["age"]
-        # if "location" in user_data:
-        #     self.object.location.all().delete()
-        #     for loc_name in user_data.get("location"):
-        #         loc, _ = Location.objects.get_or_create(name=loc_name)
-        #         self.object.location.add(loc)
+        if "location" in user_data:
+            self.object.location.clear()
+            for loc_name in user_data.get("location"):
+                loc, _ = Location.objects.get_or_create(name=loc_name)
+                self.object.location.add(loc)
         self.object.save()
 
         return JsonResponse({
