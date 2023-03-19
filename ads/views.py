@@ -137,7 +137,7 @@ class AnnouncementUpdateImageView(generic.UpdateView):
         })
 
 
-# TODO AnnouncementUpdate ============= МОДЕЛЬ РЕДАКТИРОВАНИЯ ОБЪЯВЛЕНИЯ ===========================
+# AnnouncementUpdate ============= МОДЕЛЬ РЕДАКТИРОВАНИЯ ОБЪЯВЛЕНИЯ ===========================
 @method_decorator(csrf_exempt, name='dispatch')
 class AnnouncementUpdateView(generic.CreateView):
     model = Announcement
