@@ -154,7 +154,6 @@ class AnnouncementUpdateView(generic.CreateView):
         self.object.price = announce_data["price"]
         self.object.description = announce_data["description"]
         self.object.category = get_object_or_404(Category, pk=announce_data["category"])
-
         self.object.save()
 
         return JsonResponse({
