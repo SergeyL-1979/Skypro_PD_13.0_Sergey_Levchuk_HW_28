@@ -105,7 +105,7 @@
 							]
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/ad/upload_image/21/",
+							"raw": "http://127.0.0.1:8000/ad/21/upload_image/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -116,8 +116,8 @@
 							"port": "8000",
 							"path": [
 								"ad",
-								"upload_image",
 								"21",
+								"upload_image",
 								""
 							]
 						}
@@ -139,7 +139,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/ad/update/22/",
+							"raw": "http://127.0.0.1:8000/ad/22/update/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -150,8 +150,8 @@
 							"port": "8000",
 							"path": [
 								"ad",
-								"update",
 								"22",
+								"update",
 								""
 							]
 						}
@@ -173,7 +173,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/ad/delete/23/",
+							"raw": "http://127.0.0.1:8000/ad/23/delete/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -184,8 +184,8 @@
 							"port": "8000",
 							"path": [
 								"ad",
-								"delete",
 								"23",
+								"delete",
 								""
 							]
 						}
@@ -292,7 +292,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/cat/update/6/",
+							"raw": "http://127.0.0.1:8000/cat/6/update/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -303,8 +303,8 @@
 							"port": "8000",
 							"path": [
 								"cat",
-								"update",
 								"6",
+								"update",
 								""
 							]
 						}
@@ -326,7 +326,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/cat/delete/7/",
+							"raw": "http://127.0.0.1:8000/cat/7/delete/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -337,8 +337,8 @@
 							"port": "8000",
 							"path": [
 								"cat",
-								"delete",
 								"7",
+								"delete",
 								""
 							]
 						}
@@ -379,7 +379,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/users/5",
+							"raw": "http://127.0.0.1:8000/users/5/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -390,7 +390,8 @@
 							"port": "8000",
 							"path": [
 								"users",
-								"5"
+								"5",
+								""
 							]
 						}
 					},
@@ -444,7 +445,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/users/update/14/",
+							"raw": "http://127.0.0.1:8000/users/14/update/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -455,8 +456,8 @@
 							"port": "8000",
 							"path": [
 								"users",
-								"update",
 								"14",
+								"update",
 								""
 							]
 						}
@@ -478,7 +479,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://127.0.0.1:8000/users/delete/13/",
+							"raw": "http://127.0.0.1:8000/users/13/delete/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -489,8 +490,8 @@
 							"port": "8000",
 							"path": [
 								"users",
-								"delete",
 								"13",
+								"delete",
 								""
 							]
 						}
@@ -556,7 +557,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://127.0.0.1:8000/users/location/10/",
+							"raw": "http://127.0.0.1:8000/users/10/location/",
 							"protocol": "http",
 							"host": [
 								"127",
@@ -567,8 +568,8 @@
 							"port": "8000",
 							"path": [
 								"users",
-								"location",
 								"10",
+								"location",
 								""
 							]
 						}
